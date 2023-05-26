@@ -1,4 +1,3 @@
-
 import { useDispatch } from 'react-redux'
 import { playPause, setActiveSong } from '../redux/features/playerSlice'
 import PlayPause from './PlayPause'
@@ -13,7 +12,19 @@ const SongDetailCard = ({ song, i, isPlaying, activeSong, data }) => {
     dispatch(setActiveSong({ song, data, i }))
     dispatch(playPause(true))
   }
+  const downloadURL = song.downloadUrl[4].link
+  const handleDownload = async () => {
+    const response = await fetch(downloadURL)
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
 
+    const link = document.createElement('a')
+    link.href = url
+    link.download = song.name // Set the desired file name
+    link.click()
+
+    URL.revokeObjectURL(url)
+  }
   return (
     <div className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer overflow-hidden">
       <div className="relative w-full h-56 group">
@@ -45,6 +56,12 @@ const SongDetailCard = ({ song, i, isPlaying, activeSong, data }) => {
         <p className="font-semibold text-sm text-white truncate">
           {song.label}
         </p>
+        <button
+          onClick={handleDownload}
+          className="text-white text-[22px] cursor-pointer flex mt-2"
+        >
+          Download
+        </button>
       </div>
     </div>
   )

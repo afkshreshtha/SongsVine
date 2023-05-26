@@ -1,27 +1,45 @@
-import { useDispatch } from "react-redux";
-import { playPause, setActiveSong } from "../redux/features/playerSlice";
-import PlayPause from "./PlayPause";
+import { useDispatch } from 'react-redux'
+import { playPause, setActiveSong } from '../redux/features/playerSlice'
+import PlayPause from './PlayPause'
 
-const SearchPlayListDetailsCard = ({ song, i, isPlaying, activeSong, data }) => {
-  const dispatch = useDispatch();
+const SearchPlayListDetailsCard = ({
+  song,
+  i,
+  isPlaying,
+  activeSong,
+  data,
+}) => {
+  const dispatch = useDispatch()
 
   const handlePauseClick = () => {
-    dispatch(playPause(false));
-  };
+    dispatch(playPause(false))
+  }
   const handlePlayClick = () => {
-    dispatch(setActiveSong({ song, data, i }));
-    dispatch(playPause(true));
-  };
+    dispatch(setActiveSong({ song, data, i }))
+    dispatch(playPause(true))
+  }
 
-  console.log(song);
+  const downloadURL = song.downloadUrl[4].link
+  const handleDownload = async () => {
+    const response = await fetch(downloadURL)
+    const blob = await response.blob()
+    const url = URL.createObjectURL(blob)
+
+    const link = document.createElement('a')
+    link.href = url
+    link.download = song.name // Set the desired file name
+    link.click()
+
+    URL.revokeObjectURL(url)
+  }
   return (
     <div className="flex flex-col w-[250px] p-4 bg-white/5 bg-opacity-80 backdrop-blur-sm animate-slideup rounded-lg cursor-pointer overflow-hidden">
       <div className="relative w-full h-56 group">
         <div
           className={`absolute inset-0 justify-center items-center bg-black bg-opacity-50 group-hover:flex ${
             activeSong?.id === song.id
-              ? "flex bg-black bg-opacity-70"
-              : "hidden"
+              ? 'flex bg-black bg-opacity-70'
+              : 'hidden'
           }`}
         >
           <PlayPause
@@ -45,8 +63,14 @@ const SearchPlayListDetailsCard = ({ song, i, isPlaying, activeSong, data }) => 
         <p className="font-semibold text-sm text-white truncate">
           {song.label}
         </p>
+        <button
+          onClick={handleDownload}
+          className="text-white text-[22px] cursor-pointer flex mt-2"
+        >
+          Download
+        </button>
       </div>
     </div>
-  );
-};
-export default SearchPlayListDetailsCard;
+  )
+}
+export default SearchPlayListDetailsCard
