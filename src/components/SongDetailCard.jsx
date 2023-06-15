@@ -22,7 +22,7 @@ const SongDetailCard = ({ song, i, isPlaying, activeSong, data }) => {
 
     const link = document.createElement('a')
     link.href = url
-    link.download = `${song.name}.mp3` // Set the desired file name
+    link.download = `${song.name}` // Set the desired file name
     link.click()
     URL.revokeObjectURL(url)
     setText('Downloaded')
