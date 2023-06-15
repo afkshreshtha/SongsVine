@@ -37,6 +37,7 @@ const SearchPlayListCard = ({ song, i, isPlaying, activeSong, data }) => {
             ? `${song?.name}`
             : "No artists found"
         }`}</p>
+                <p className="text-sm truncate text-gray-300 mt-1">{`Number of songs - ${song.songCount}`}</p>
       </div>
     </div>
   );
